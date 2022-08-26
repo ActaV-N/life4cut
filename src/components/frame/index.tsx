@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const StyledFrame = styled.div`
     display:flex;
@@ -30,10 +30,15 @@ const StyledFrame = styled.div`
 
             mask-size:100%;
 
+            transition: background-color .15s cubic-bezier(0.37, 0, 0.63, 1);
+
             &.arrow-right{
                 transform-origin:center;
                 transform:rotate(180deg);
             }
+        }
+        &:disabled .arrow {
+            background:#ddd;
         }
     }
 
@@ -41,51 +46,83 @@ const StyledFrame = styled.div`
         width:31vw;
         aspect-ratio:1 / 1.5;
 
-        display:flex;
         overflow:hidden;
         
-        .frame-wrapper{
-            width:100%;
+        .frames-wrapper{
+            display:flex;
             height:100%;
+            
+            transition:transform 0.5s cubic-bezier(0.33, 1, 0.68, 1);
 
-            flex:1 0 auto;
-
-            figure{
+            .frame-wrapper{
                 width:100%;
                 height:100%;
-
-                background-size:100%;
+    
+                flex:1 0 auto;
+    
+                figure{
+                    width:100%;
+                    height:100%;
+    
+                    background-size:100%;
+                }
             }
         }
     }
 `
 
 const Frame = () => {
+    const [frameIndex, setFrameIndex] = useState<number>(0);
+    const framesWrapperRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const wrapper = framesWrapperRef.current
+
+        if(wrapper){
+            wrapper.style.transform = `translate(${-31 * frameIndex}vw, 0)`;
+        }
+    }, [frameIndex])
+
+    const handleFrameIndex = (dir: number) => {
+        let newFrameIndex = frameIndex + dir;
+        if(newFrameIndex === -1){
+            newFrameIndex = 0;
+        }
+
+        if(newFrameIndex === 3){
+            newFrameIndex = 2;
+        }
+
+        setFrameIndex(newFrameIndex);
+    }
+
     return <StyledFrame>
-        <button className="arrow-container">
+        <button className="arrow-container" disabled={frameIndex === 0} onClick={() => handleFrameIndex(-1)}>
             <i className="arrow arrow-left"></i>
         </button>
         <div className="frame-container">
-            <div className="frame-wrapper">
-                <figure style={{
-                    backgroundImage:'url(images/frame_black.png)'
-                }}>
-                </figure>
-            </div>
-            <div className="frame-wrapper">
-                <figure style={{
-                    backgroundImage:'url(images/frame_orange.png)'
-                }}>
-                </figure>
-            </div>
-            <div className="frame-wrapper">
-                <figure style={{
-                    backgroundImage:'url(images/frame_white.png)'
-                }}>
-                </figure>
+            <div className="frames-wrapper" ref={framesWrapperRef}>
+                <div className="frame-wrapper">
+                    <figure style={{
+                        backgroundImage:'url(images/frame_black.png)'
+                    }}>
+                    </figure>
+                </div>
+                <div className="frame-wrapper">
+                    <figure style={{
+                        backgroundImage:'url(images/frame_orange.png)'
+                    }}>
+                    </figure>
+                </div>
+                <div className="frame-wrapper">
+                    <figure style={{
+                        backgroundImage:'url(images/frame_white.png)'
+                    }}>
+                    </figure>
+                </div>
             </div>
         </div>
-        <button className="arrow-container">
+        <button className="arrow-container" disabled={frameIndex === 2} onClick={() => handleFrameIndex(1)}>
             <i className="arrow arrow-right"></i>
         </button>
     </StyledFrame>

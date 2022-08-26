@@ -11,3 +11,7 @@ body {
   
   background:#f7f7f7;
 }
+
+body{
+  min-width:1280px;
+}
