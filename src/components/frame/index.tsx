@@ -69,6 +69,7 @@ const StyledFrame = styled.div`
                     height:100%;
     
                     background-size:100%;
+                    background-repeat:no-repeat;
                 }
             }
         }
