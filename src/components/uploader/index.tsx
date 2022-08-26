@@ -3,6 +3,7 @@ import React, { ChangeEvent, ReactEventHandler } from 'react';
 
 const StyledUploader = styled.div`
     width:31vw;
+    min-width:396px;
     aspect-ratio:1 / 1.5;
     
     background:#fff;

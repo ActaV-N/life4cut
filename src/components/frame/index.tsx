@@ -6,7 +6,10 @@ const StyledFrame = styled.div`
 
     .arrow-container{
         width:7.5vw;
+        min-width:96px;
+
         height:calc(31vw * 1.5);
+        min-height:calc(396px * 1.5);
 
         display:flex;
         align-items:center;
@@ -44,8 +47,9 @@ const StyledFrame = styled.div`
 
     .frame-container{
         width:31vw;
+        min-width:396px;
         aspect-ratio:1 / 1.5;
-
+        
         overflow:hidden;
         
         .frames-wrapper{
@@ -75,12 +79,25 @@ const Frame = () => {
     const [frameIndex, setFrameIndex] = useState<number>(0);
     const framesWrapperRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
+    const setFrameWrapperPos = () => {
         const wrapper = framesWrapperRef.current
 
         if(wrapper){
-            wrapper.style.transform = `translate(${-31 * frameIndex}vw, 0)`;
+            const moveTo = document.body.clientWidth <= 1280 ? `${-396 * frameIndex}px` : `${-31 * frameIndex}vw`
+            wrapper.style.transform = `translate(${moveTo}, 0)`;
         }
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', setFrameWrapperPos);
+
+        return () => {
+            window.removeEventListener('resize', setFrameWrapperPos);
+        }
+    }, [])
+
+    useEffect(() => {
+        setFrameWrapperPos();
     }, [frameIndex])
 
     const handleFrameIndex = (dir: number) => {
