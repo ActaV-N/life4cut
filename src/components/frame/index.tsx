@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import React, { useEffect, useRef, useState } from "react";
+import { photoT } from "../../hooks/usePhoto";
 
 const StyledFrame = styled.div`
     display:flex;
@@ -63,6 +64,8 @@ const StyledFrame = styled.div`
                 height:100%;
     
                 flex:1 0 auto;
+
+                position:relative;
     
                 figure{
                     width:100%;
@@ -76,7 +79,61 @@ const StyledFrame = styled.div`
     }
 `
 
-const Frame = () => {
+export type FrameProps = {
+    photos: photoT[]
+}
+
+const StyledGrid = styled.div`
+    position:absolute;
+    top:0;
+    left:0;
+
+    width: 100%;
+    height: calc(100% - 57px);
+    padding: 28px 19px;
+
+    .images-container{
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: 1fr;
+        row-gap: 1.5%;
+        column-gap: 2%;
+        
+        .image-item{
+            overflow: hidden;
+            background: #eee;
+            position: relative;
+
+            .image-container{
+                width:100%;
+                height:100%;
+
+                img{
+                    width:100%;
+                    height:100%;
+                    object-fit:cover;
+                }
+            }
+        }
+    }
+`
+
+const GridContainer = ({photos}: FrameProps) => {
+    return <StyledGrid>
+        <div className="images-container">
+            {Array.from(Array(4)).map((_, i) => 
+            <div className='image-item' key={i}>
+                { photos[i] && <div className='image-container'>
+                    <img src={photos[i].src} alt={`image${i}`} />
+                </div> }   
+            </div>)}
+        </div>
+    </StyledGrid>
+}
+
+const Frame = ({photos}: FrameProps) => {
     const [frameIndex, setFrameIndex] = useState<number>(0);
     const framesWrapperRef = useRef<HTMLDivElement>(null);
 
@@ -125,18 +182,21 @@ const Frame = () => {
                         backgroundImage:'url(images/frame_black.png)'
                     }}>
                     </figure>
+                    <GridContainer photos={photos} />
                 </div>
                 <div className="frame-wrapper">
                     <figure style={{
                         backgroundImage:'url(images/frame_orange.png)'
                     }}>
                     </figure>
+                    <GridContainer photos={photos} />
                 </div>
                 <div className="frame-wrapper">
                     <figure style={{
                         backgroundImage:'url(images/frame_white.png)'
                     }}>
                     </figure>
+                    <GridContainer photos={photos} />
                 </div>
             </div>
         </div>

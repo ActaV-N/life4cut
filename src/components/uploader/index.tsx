@@ -45,8 +45,8 @@ const StyledUploader = styled.div`
                 // grid-template-rows:auto;
                 grid-auto-rows:1fr;
 
-                row-gap:2.25%;
-                column-gap:2.25%;
+                row-gap:1.5%;
+                column-gap:2%;
 
                 .preview-item{
                     overflow:hidden;

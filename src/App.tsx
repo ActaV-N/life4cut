@@ -19,7 +19,7 @@ function App() {
 
   return (
     <StyledAppContainer>
-      <Frame/>
+      <Frame photos={photos} />
       <Uploader photos={photos} setPhotoInformation={setPhotoInformation} />
     </StyledAppContainer>
   );
