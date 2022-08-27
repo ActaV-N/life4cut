@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
-import React, { ChangeEvent, ReactEventHandler } from 'react';
+import React, { ChangeEvent, ReactEventHandler, useEffect } from 'react';
+import { photoT } from '../../hooks/usePhoto';
 
 const StyledUploader = styled.div`
     width:31vw;
@@ -41,11 +42,15 @@ const StyledUploader = styled.div`
                 
                 display:grid;
                 grid-template-columns:1fr 1fr;
+                // grid-template-rows:auto;
+                grid-auto-rows:1fr;
 
                 row-gap:2.25%;
                 column-gap:2.25%;
 
                 .preview-item{
+                    overflow:hidden;
+
                     background:#eee;
                     position:relative;
 
@@ -68,7 +73,16 @@ const StyledUploader = styled.div`
 
                         background:#000;
                     }
+                    .preview-image-container{
+                        width:100%;
+                        height:100%;
 
+                        img{
+                            width:100%;
+                            height:100%;
+                            object-fit:cover;
+                        }
+                    }
                 }
             }
         }
@@ -116,10 +130,18 @@ const StyledUploader = styled.div`
     }
 `
 
-const Uploader = () => {
+export type UploaderProps = {
+    photos: photoT[],
+    setPhotoInformation: Function
+};
+
+const Uploader = ({photos, setPhotoInformation}: UploaderProps) => {
     const handleChange = (e:ChangeEvent) => {
         const target = e.target as HTMLInputElement
-        console.log(target.files);
+        if(target && target.files){
+            const files = target.files;
+            setPhotoInformation(files)
+        }
     };
 
     return <StyledUploader>
@@ -127,21 +149,13 @@ const Uploader = () => {
             <label htmlFor='image-uploader' className='image-uploader--container'>
                 <input type="file" multiple id='image-uploader' onChange={handleChange} />
                 <div className='previews-container'>
-                    <div className='preview-item'>
-                        <i className='preview-ico'></i>
-                    </div>
-                    <div className='preview-item'>
-                        <i className='preview-ico'></i>
-
-                    </div>
-                    <div className='preview-item'>
-                        <i className='preview-ico'></i>
-
-                    </div>
-                    <div className='preview-item'>
-                        <i className='preview-ico'></i>
-
-                    </div>
+                    {Array.from(Array(4)).map((_, i) => 
+                        <div className='preview-item' key={i}>
+                            <i className='preview-ico'></i>
+                            { photos[i] && <div className='preview-image-container'>
+                                <img src={photos[i].src} alt={`image${i}`} />
+                            </div> }   
+                        </div>)}
                 </div>
             </label>
         </div>
