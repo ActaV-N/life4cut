@@ -2,6 +2,7 @@ import styled from '@emotion/styled';
 import React from 'react';
 import Frame from './components/frame';
 import Uploader from './components/uploader';
+import usePhoto from './hooks/usePhoto';
 
 const StyledAppContainer = styled.div`
   display:grid;
@@ -14,10 +15,12 @@ const StyledAppContainer = styled.div`
 `
 
 function App() {
+  const { photos, setPhotoInformation } = usePhoto();
+
   return (
     <StyledAppContainer>
       <Frame/>
-      <Uploader/>
+      <Uploader photos={photos} setPhotoInformation={setPhotoInformation} />
     </StyledAppContainer>
   );
 }
